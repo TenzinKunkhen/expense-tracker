@@ -1,27 +1,17 @@
-import express from "express";
 //only for dev mode needs to be removed on prod
 import path from "path";
 import template from "./../template";
 import devBundle from "./devBundle";
+import {MongoClient} from 'mongodb';
+import dotenv from 'dotenv';
 
-const app = express();
+dotenv.config();
+const url  = process.env.MONGODB_URI;
 
-app.get("/", (req, res) => {
-  res.status(200).send(template());
+MongoClient.connect(url, (err, db) => {
+ // const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  console.log('connected to mongo server')
+  db.close()
+
 });
-
-
-const CURRENT_WORKING_DIR = process.cwd();
-app.use("/dist", express.static(path.join(CURRENT_WORKING_DIR, "dist")));
-
-
-//remove this too
-devBundle.compile(app);
-
-let port = process.env.PORT || 3000
-app.listen(port, function onStart(err) {
- if (err) {
-  console.log(err) 
- }
- console.info('Server started on port %s.', port)
-})
