@@ -10,7 +10,7 @@ TODO
 TODO
 ```
 
-#API Endpoints
+# API Endpoints
 
 Create a user
 /api/users
@@ -20,7 +20,7 @@ Create a user
 /auth/signin
 /auth/signout
 
-Auth is set up with JWT
+- Auth is set up with JWT
 
 
 
