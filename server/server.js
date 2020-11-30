@@ -1,17 +1,34 @@
 //only for dev mode needs to be removed on prod
-import path from "path";
-import template from "./../template";
+
 import devBundle from "./devBundle";
-import {MongoClient} from 'mongodb';
-import dotenv from 'dotenv';
+import { config } from "./../config/config";
+import app from "./express";
+import mongoose from "mongoose";
 
-dotenv.config();
-const url  = process.env.MONGODB_URI;
-
-MongoClient.connect(url, (err, db) => {
- // const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
-  console.log('connected to mongo server')
-  db.close()
-
+mongoose.Promise = global.Promise;
+mongoose.connect(config.mongoUri, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
 });
+const mongoUri = config.mongoUri
+console.log(mongoUri, 'MONGO URI')
+mongoose.connection.on('error', (err) => {
+  console.log(err)
+})
+
+// app.get("/", (req, res) => {
+//   res.status(200).send(template());
+// });
+
+//const CURRENT_WORKING_DIR = process.cwd();
+// app.use("/dist", express.static(path.join(CURRENT_WORKING_DIR, "dist")));
+
+app.listen(config.port, function onStart(err) {
+  if (err) {
+    console.log(err);
+  }
+  console.info("Server started on port %s.", config.port);
+});
+
+devBundle.compile(app);
